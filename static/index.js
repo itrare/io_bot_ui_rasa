@@ -18,6 +18,13 @@ jQuery(document).ready(function(){
         setUserResponse(textToSent);
         }
     });
+    jQuery(".in-cb-rightItem button").click(function(){
+        jQuery(this).children().eq(0).toggleClass("fa-info");
+        jQuery(this).children().eq(0).toggleClass("fa-arrow-left");
+        jQuery(".in-cb-iabout").toggle();
+        jQuery(".in-cb-iabout").toggleClass("pers_anim01");
+        jQuery(".body-msg").toggle();
+    });
     function scrollBottom(){
         jQuery(".in-cb-body").scrollTop( jQuery(".in-cb-body").prop('scrollHeight') );
     }
@@ -42,7 +49,7 @@ jQuery(document).ready(function(){
     function putResponse(response){
         setTimeout(function() {
             botSpinner(false);
-            let defaultMessage = "";
+            let defaultMessage = "<li>Sorry for incovinience, I am facing some trouble!</li>";
             let BotResponse;
             if (response.length < 1) {
                 //if there is no response from Rasa, send  fallback message to the user
@@ -50,7 +57,7 @@ jQuery(document).ready(function(){
     
                
     
-                jQuery(BotResponse).appendTo(".body-msg");
+               // jQuery(BotResponse).appendTo(".body-msg");
                 scrollBottom();
             } else {
     
@@ -120,24 +127,24 @@ jQuery(document).ready(function(){
                         }
     
                         //check if the custom payload type is "chart"
-                        if (response[i].custom.payload == "chart") {
-    
+                        if (response[i].custom.hasOwnProperty("payload")) {
+
                             // sample format of the charts data:
                             // var chartData = { "title": "Leaves", "labels": ["Sick Leave", "Casual Leave", "Earned Leave", "Flexi Leave"], "backgroundColor": ["#36a2eb", "#ffcd56", "#ff6384", "#009688", "#c45850"], "chartsData": [5, 10, 22, 3], "chartType": "pie", "displayLegend": "true" }
     
                             //store the below parameters as global variable, 
                             // so that it can be used while displaying the charts in modal.
-                            chartData = (response[i].custom.data)
-                            title = chartData.title;
-                            labels = chartData.labels;
-                            backgroundColor = chartData.backgroundColor;
-                            chartsData = chartData.chartsData;
-                            chartType = chartData.chartType;
-                            displayLegend = chartData.displayLegend;
+                            chartData = (response[i].custom.payload.data)
+                     //       title = chartData.title;
+                       //     labels = chartData.labels;
+                      //      backgroundColor = chartData.backgroundColor;
+                           // chartsData = chartData.chartsData;
+                           // chartType = chartData.chartType;
+                            //displayLegend = chartData.displayLegend;
     
                             // pass the above variable to createChart function
-                            createChart(title, labels, backgroundColor, chartsData, chartType, displayLegend);
-                            return;
+                            createChart(chartData);
+                           
                         }
     
                         //check of the custom payload type is "collapsible"
@@ -150,16 +157,22 @@ jQuery(document).ready(function(){
                 }
                 
             }
-            var container = `<div class="msg-wrapper"><div class="msg-grp bot-msg">
-            <div class="u-pic">
-                <img src="./static/2f08ab311cb92ed2cfafc691b12a8ce2.jpg">
-            </div>
-            <div class="msg-items"> `+ BotResponse +`</div>
-            </div></div>`;
-            jQuery(container).appendTo(".body-msg");
-            scrollBottom();
-            console.log(container);
+            if(response.length>0){
+                defaultMessage = BotResponse;
+            }
+            appendToMSGBody(defaultMessage);
+           
         }, 500);
+    }
+    function appendToMSGBody(MSG){
+        var container = `<div class="msg-wrapper"><div class="msg-grp bot-msg">
+        <div class="u-pic">
+            <img src="./static/2f08ab311cb92ed2cfafc691b12a8ce2.jpg">
+        </div>
+        <div class="msg-items"> `+  MSG+`</div>
+        </div></div>`;
+        jQuery(container).appendTo(".body-msg");
+        scrollBottom();
     }
     function sendRequest(text){
         jQuery.ajax({
@@ -221,5 +234,57 @@ jQuery(document).ready(function(){
                 return addB;
           
         }
+        function createChart(data,chartType="bar") {
+            //if you want to display the charts in modal, make sure you have configured the modal in index.html
+            //create the context that will draw the charts over the canvas in the "#modal-chart" div of the modal
+            
+           // jQuery(ctx).removeClass("newChart");
+            var container = `<li class="bothelp-canvas-set">  <button class="chart-expand-btn"><i class="fas fa-expand-alt"></i></button> <div> <canvas class="newChart" height="720" width="500"></canvas></div></li>`;
+            appendToMSGBody(container);
+            var cntx = jQuery(".newChart");
+          //  cntx.canvas.parentNode.style.height = '300px';
+            //cntx.canvas.parentNode.style.width = '250px';
+            
+            
+            // Once you have the element or context, instantiate the chart-type by passing the configuration,
+            //for more info. refer: https://www.chartjs.org/docs/latest/configuration/
+            
+            var options = {
+                title: {
+                    display: true,
+                    text: "DEMO"
+                },
+                layout: {
+                    padding: {
+                        left: 5,
+                        right: 0,
+                        top: 0,
+                        bottom: 0
+                    }
+                },
+                legend: {
+                 
+                    position: "top"
+                },
+                maintainAspectRatio:true,
+                responsive:true,
+        
+            }
+        
+            modalChart = new Chart(cntx, {
+                type: chartType,
+                data: data,
+                options: options
+            });
+     
+            
+
+            cntx.removeClass("newChart");
+           
+           
+            scrollBottom();
+
+        }
+
 
 });
