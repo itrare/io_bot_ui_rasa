@@ -239,7 +239,10 @@ jQuery(document).ready(function(){
             //create the context that will draw the charts over the canvas in the "#modal-chart" div of the modal
             
            // jQuery(ctx).removeClass("newChart");
-            var container = `<li class="bothelp-canvas-set">  <button class="chart-expand-btn"><i class="fas fa-expand-alt"></i></button> <div> <canvas class="newChart" height="720" width="500"></canvas></div></li>`;
+            var container = `<li class="bothelp-canvas-set"> <div class="side-options">
+            <button><i class="fas fa-chart-pie fa-fw"></i></button>
+            <button><i class="far fa-chart-bar fa-fw"></i></button>
+        </div> <button class="chart-expand-btn"><i class="fas fa-expand-alt"></i></button> <div> <canvas class="newChart" height="720" width="500"></canvas></div></li>`;
             appendToMSGBody(container);
             var cntx = jQuery(".newChart");
           //  cntx.canvas.parentNode.style.height = '300px';

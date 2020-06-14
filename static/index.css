@@ -280,6 +280,29 @@ animation-fill-mode: both;
     width: 200px !important;
     height: 200px !important;
 }
+.msg-items li:hover .side-options{
+    display: block;
+}
+.side-options{
+    position: absolute;
+    top:15px;
+    left:5px;
+    display: none;
+    background-color:  rgba(42, 37, 37, 0.212);
+    border-radius: 5px;
+    z-index: 1000 !important;
+
+    
+}
+.side-options button{
+    display: block;
+    padding:5px 5px;
+    border:none;
+    border-radius: 5px;
+    margin:5px;
+    color: dodgerblue;
+}
+
 .bot-msg .msg-items li:first-child{
     list-style-type: none;
     padding:7px 15px;
@@ -300,6 +323,7 @@ animation-fill-mode: both;
     animation-name: tinLeftIn;
 
 }
+
 .user-msg .msg-items{
     float: right;
 }
@@ -558,7 +582,8 @@ iframe{
     display: inline-block;
     -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
     animation: sk-bouncedelay 1.4s infinite ease-in-out both;
-    background: rgba(0,0,0,1);
+    background: #9796f0;
+    
   }
    
   .spinner .bounce1 {
