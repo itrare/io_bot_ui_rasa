@@ -337,7 +337,7 @@ animation-fill-mode: both;
     width:max-content;
     border-radius:25px 0px 25px 25px;
     color:#212F3D;
-    margin:3px 3px;
+    margin:3px 0px;
 
     background:white;
 }
@@ -347,7 +347,7 @@ animation-fill-mode: both;
     width:max-content;
     border-radius:25px 25px 25px 25px;
     color:#212F3D;
-    margin:3px 3px;
+    margin:3px 0px;
 
     background:white;
     -webkit-animation-name: tinRightIn;

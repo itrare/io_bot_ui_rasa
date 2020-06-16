@@ -2,15 +2,23 @@ jQuery = $.noConflict();
 jQuery(document).ready(function(){
 
 // =============== send request/queries by user ================== //
-   
+    jQuery("#in-cb-sendText").on('keypress',function(e) {
+    if(e.which == 13) {
+        catchText();
+    }
+    });
+    
     jQuery("#in-cb-sendit").click(function(){
+        catchText();
+    });
+    function catchText(){
         let textToSent = jQuery("#in-cb-sendText").val();
         jQuery("#in-cb-sendText").val("");
         if(textToSent!=""){
         sendRequest(textToSent);
         setUserResponse(textToSent);
         }
-    });
+    }
     jQuery(document).on("click","li.msg-button button",function(){
         let textToSent = jQuery(this).text();
         if(textToSent!=""){
