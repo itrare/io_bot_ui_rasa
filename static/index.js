@@ -24,6 +24,7 @@ jQuery(document).ready(function(){
         jQuery(".in-cb-iabout").toggle();
         jQuery(".in-cb-iabout").toggleClass("pers_anim01");
         jQuery(".body-msg").toggle();
+        scrollBottom();
     });
     function scrollBottom(){
         jQuery(".in-cb-body").scrollTop( jQuery(".in-cb-body").prop('scrollHeight') );
@@ -51,6 +52,7 @@ jQuery(document).ready(function(){
             botSpinner(false);
             let defaultMessage = "<li>Sorry for incovinience, I am facing some trouble!</li>";
             let BotResponse;
+           
             if (response.length < 1) {
                 //if there is no response from Rasa, send  fallback message to the user
                 var fallbackMsg = "Sorry for incovinience, I am facing some trouble!";
@@ -60,41 +62,47 @@ jQuery(document).ready(function(){
                // jQuery(BotResponse).appendTo(".body-msg");
                 scrollBottom();
             } else {
-    
+                
+
                 //if we get response from Rasa
                 BotResponse = '';
                 for (i = 0; i < response.length; i++) {
-    
+                    
                     //check if the response contains "text"
                     if (response[i].hasOwnProperty("text")) {
                         
                         iRes = `<li>`+ response[i].text +`</li>`;
 
-                    BotResponse +=iRes;
+                        BotResponse +=iRes;
+                    
                     }
     
                     //check if the response contains "images"
                     if (response[i].hasOwnProperty("image")) {
-                        BotResponse = '<li> <div class="bothelp-snippet"> <button class="chart-expand-btn"><i class="fas fa-expand-alt"></i></button> <img src="'+response[i].image+'"></div></li>';
+                        BotResponse += '<li> <div class="bothelp-snippet"> <button class="chart-expand-btn"><i class="fas fa-expand-alt"></i></button> <img src="'+response[i].image+'"></div></li>';
                         
                     }
     
     
                     //check if the response contains "buttons" 
+                    
                     if (response[i].hasOwnProperty("buttons")) {
                         
-                     
-                        BotResponse += addButton(response[i].buttons);
+                        
+                        let buttons = response[i].buttons;
+                        BotResponse += addButton(buttons);
+                        
+                        
                     }
-    
                     //check if the response contains "attachment" 
+                    
                     if (response[i].hasOwnProperty("attachment")) {
     
                         //check if the attachment type is "video"
                         if (response[i].attachment.type == "video") {
                             video_url = response[i].attachment.payload.src;
     
-                            BotResponse =  `<li><div class="bothelp-video-set"><button class="chart-expand-btn"><i class="fas fa-expand-alt"></i></button><iframe 
+                            BotResponse +=  `<li><div class="bothelp-video-set"><button class="chart-expand-btn"><i class="fas fa-expand-alt"></i></button><iframe 
                             src="`+ video_url +`" allowfullscreen></iframe></div></li>`;
                         }
     
@@ -108,7 +116,7 @@ jQuery(document).ready(function(){
                         //check if the custom payload type is "pdf_attachment"
                         if (response[i].custom.image == "pdf_attachment") {
     
-                            BotResponse = `<li> <div class="bothelp-snippet"> <button class="chart-expand-btn"><i class="fas fa-expand-alt"></i></button> <img src="`+response[i].custom.image.src +`"></div></li>`;
+                            BotResponse += `<li> <div class="bothelp-snippet"> <button class="chart-expand-btn"><i class="fas fa-expand-alt"></i></button> <img src="`+response[i].custom.image.src +`"></div></li>`;
                         }
     
                         //check if the custom payload type is "location"
@@ -225,8 +233,8 @@ jQuery(document).ready(function(){
                 
                 // Loop through suggestions]
                 let addB = "<li class='msg-button'>";
-                for (i = 0; i <noBtn; i++) {
-                    addB+='<button data-payload=\'' + (BTN[i].payload) + '\'>' + BTN[i].title + "</button>"
+                for (var j = 0; j <noBtn; j++) {
+                    addB+='<button data-payload=\'' + (BTN[j].payload) + '\'>' + BTN[j].title + "</button>"
                     
                 }
                 addB+='</li>';
