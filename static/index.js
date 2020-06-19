@@ -73,23 +73,19 @@ jQuery(document).ready(function(){
             botSpinner(false);
             let defaultMessage = "<li>Sorry for incovinience, I am facing some trouble!</li>";
             let BotResponse;
-           
+            let customResponse;
             if (response.length < 1) {
-                //if there is no response from Rasa, send  fallback message to the user
+
                 var fallbackMsg = "Sorry for incovinience, I am facing some trouble!";
-    
-               
-    
-               // jQuery(BotResponse).appendTo(".body-msg");
+  
                 scrollBottom();
             } else {
                 
 
-                //if we get response from Rasa
                 BotResponse = '';
+                customResponse = '';
                 for (i = 0; i < response.length; i++) {
-                    
-                    //check if the response contains "text"
+   
                     if (response[i].hasOwnProperty("text")) {
                         
                         iRes = `<li>`+ response[i].text +`</li>`;
@@ -98,14 +94,12 @@ jQuery(document).ready(function(){
                     
                     }
     
-                    //check if the response contains "images"
                     if (response[i].hasOwnProperty("image")) {
                         BotResponse += '<li> <div class="bothelp-snippet"> <button class="chart-expand-btn"><i class="fas fa-expand-alt"></i></button> <img src="'+response[i].image+'"></div></li>';
                         
                     }
     
-    
-                    //check if the response contains "buttons" 
+
                     
                     if (response[i].hasOwnProperty("buttons")) {
                         
@@ -115,11 +109,11 @@ jQuery(document).ready(function(){
                         
                         
                     }
-                    //check if the response contains "attachment" 
+
                     
                     if (response[i].hasOwnProperty("attachment")) {
     
-                        //check if the attachment type is "video"
+               
                         if (response[i].attachment.type == "video") {
                             video_url = response[i].attachment.payload.src;
     
@@ -128,59 +122,36 @@ jQuery(document).ready(function(){
                         }
     
                     }
-                    //check if the response contains "custom" message  
+     
                     if (response[i].hasOwnProperty("custom")) {
     
-            
-        
-                            
-                        //check if the custom payload type is "pdf_attachment"
                         if (response[i].custom.image == "pdf_attachment") {
     
                             BotResponse += `<li> <div class="bothelp-snippet"> <button class="chart-expand-btn"><i class="fas fa-expand-alt"></i></button> <img src="`+response[i].custom.image.src +`"></div></li>`;
                         }
     
-                        //check if the custom payload type is "location"
                         if (response[i].custom.payload == "location") {
                             jQuery("#userInput").prop('disabled', true);
                             return;
                         }
-    
-                        //check if the custom payload type is "cardsCarousel"
                         if (response[i].custom.payload == "carousel") {
                             
                             carouselData = (response[i].custom.carousels);
-                            renderCarousel(carouselData);
-                            continue;
+                            customResponse += renderCarousel(carouselData);
                             
                         }
     
-                        //check if the custom payload type is "chart"
-                        if (response[i].custom.hasOwnProperty("payload")) {
+                        if (response[i].custom.payload == "chart") {
 
-                            // sample format of the charts data:
-                            // var chartData = { "title": "Leaves", "labels": ["Sick Leave", "Casual Leave", "Earned Leave", "Flexi Leave"], "backgroundColor": ["#36a2eb", "#ffcd56", "#ff6384", "#009688", "#c45850"], "chartsData": [5, 10, 22, 3], "chartType": "pie", "displayLegend": "true" }
-    
-                            //store the below parameters as global variable, 
-                            // so that it can be used while displaying the charts in modal.
-                            chartData = (response[i].custom.payload.data)
-                     //       title = chartData.title;
-                       //     labels = chartData.labels;
-                      //      backgroundColor = chartData.backgroundColor;
-                           // chartsData = chartData.chartsData;
-                           // chartType = chartData.chartType;
-                            //displayLegend = chartData.displayLegend;
-    
-                            // pass the above variable to createChart function
+                            chartData = (response[i].custom.data)
                             createChart(chartData);
+                            
                            
                         }
-    
-                        //check of the custom payload type is "collapsible"
+
                         if (response[i].custom.payload == "collapsible") {
                             data = (response[i].custom.data);
-                            //pass the data variable to createCollapsible function
-                          //  createCollapsible(data);
+
                         }
                     }
                 }
@@ -190,8 +161,13 @@ jQuery(document).ready(function(){
                 defaultMessage = BotResponse;
             }
             appendToMSGBody(defaultMessage);
+            appendCustomResponse(customResponse);
            
         }, 0);
+    }
+    function appendCustomResponse(custom){
+        jQuery(custom).insertBefore(".body-msg #spinner-holder");
+        scrollBottom();
     }
     function appendToMSGBody(MSG,custom=false){
         var container = `<div class="msg-wrapper"><div class="msg-grp bot-msg">
@@ -353,8 +329,8 @@ jQuery(document).ready(function(){
             </div>
         </div>`;
         
-        jQuery(groupCarousel).insertBefore(".body-msg #spinner-holder");
-        scrollBottom();
+       //
+        return groupCarousel;
             
 
         }
