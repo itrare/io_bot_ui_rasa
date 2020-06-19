@@ -19,6 +19,15 @@ jQuery(document).ready(function(){
         setUserResponse(textToSent);
         }
     }
+    jQuery(document).on("click","#caraousel-slide button",function(){
+
+        if(jQuery(this).attr('data') == "next"){
+            jQuery(".carousel-grp").animate({scrollLeft:jQuery(".carousel-grp").scrollLeft() + 270},300);
+        }else{
+            jQuery(".carousel-grp").animate({scrollLeft:jQuery(".carousel-grp").scrollLeft() - 270},300);
+
+        }
+    });
     jQuery(document).on("click","li.msg-button button",function(){
         let textToSent = jQuery(this).text();
         if(textToSent!=""){
@@ -26,12 +35,16 @@ jQuery(document).ready(function(){
         setUserResponse(textToSent);
         }
     });
-    jQuery(".in-cb-rightItem button").click(function(){
+    jQuery(".in-cb-rightItem #show-about").click(function(){
         jQuery(this).children().eq(0).toggleClass("fa-info");
         jQuery(this).children().eq(0).toggleClass("fa-arrow-left");
         jQuery(".in-cb-iabout").toggle();
         jQuery(".in-cb-iabout").toggleClass("pers_anim01");
         jQuery(".body-msg").toggle();
+        scrollBottom();
+    });
+    jQuery(".in-cb-rightItem #expand-chatroom").click(function(){
+
         scrollBottom();
     });
     function scrollBottom(){
@@ -45,12 +58,12 @@ jQuery(document).ready(function(){
                 <li> ` + message + `</li>
             </div>
             <div class="u-pic">
-                <img src="./static/2f08ab311cb92ed2cfafc691b12a8ce2.jpg">
+                <img src="./static/bot2.png">
 
             </div>
         </div>
         </div>`;
-        jQuery(UserResponse).appendTo(".body-msg").show("slow");
+        jQuery(UserResponse).insertBefore(".body-msg #spinner-holder");
         botSpinner(true);
         scrollBottom();
        
@@ -130,16 +143,16 @@ jQuery(document).ready(function(){
                         //check if the custom payload type is "location"
                         if (response[i].custom.payload == "location") {
                             jQuery("#userInput").prop('disabled', true);
-                            getLocation();
-                            scrollToBottomOfResults();
                             return;
                         }
     
                         //check if the custom payload type is "cardsCarousel"
-                        if (response[i].custom.payload == "cardsCarousel") {
-                            restaurantsData = (response[i].custom.data)
-                            showCardsCarousel(restaurantsData);
-                            return;
+                        if (response[i].custom.payload == "carousel") {
+                            
+                            carouselData = (response[i].custom.carousels);
+                            renderCarousel(carouselData);
+                            continue;
+                            
                         }
     
                         //check if the custom payload type is "chart"
@@ -178,16 +191,17 @@ jQuery(document).ready(function(){
             }
             appendToMSGBody(defaultMessage);
            
-        }, 500);
+        }, 0);
     }
-    function appendToMSGBody(MSG){
+    function appendToMSGBody(MSG,custom=false){
         var container = `<div class="msg-wrapper"><div class="msg-grp bot-msg">
         <div class="u-pic">
-            <img src="./static/2f08ab311cb92ed2cfafc691b12a8ce2.jpg">
+            <img src="./static/landing-page-smart-home-with-robot-icon/2050_CROP.jpg">
         </div>
         <div class="msg-items"> `+  MSG+`</div>
         </div></div>`;
-        jQuery(container).appendTo(".body-msg");
+       // jQuery(container).appendTo(".body-msg");
+        jQuery(container).insertBefore(".body-msg #spinner-holder");
         scrollBottom();
     }
     function sendRequest(text){
@@ -228,9 +242,9 @@ jQuery(document).ready(function(){
         }
         function botSpinner(param){
             if(param===true){
-                jQuery(".spinner").show();
+                jQuery("#spinner-holder").show();
             }else{
-                jQuery(".spinner").hide();
+                jQuery("#spinner-holder").hide(0);
             }
         }
         botSpinner(false);
@@ -250,7 +264,7 @@ jQuery(document).ready(function(){
                 return addB;
           
         }
-        function createChart(data,chartType="bar") {
+        function createChart(data,chartType="line") {
             //if you want to display the charts in modal, make sure you have configured the modal in index.html
             //create the context that will draw the charts over the canvas in the "#modal-chart" div of the modal
             
@@ -287,7 +301,7 @@ jQuery(document).ready(function(){
                 },
                 maintainAspectRatio:true,
                 responsive:true,
-        
+                steppedLine:true,
             }
         
             modalChart = new Chart(cntx, {
@@ -302,6 +316,46 @@ jQuery(document).ready(function(){
            
            
             scrollBottom();
+
+        }
+        function renderCarousel(data){
+            let dataLength = data.length;
+            let carousel='';
+            for(var j=0;j < dataLength;j++){
+                carousel += `<div class="carousel-item">
+                                <div class="carousel-head">
+                                    <div> ` +data[j].title + `</div>
+                                </div>
+                                <div class="carousel-body">
+                                    <img src="` +data[j].image + `">
+                                </div>
+                                <div class="carousel-footer">
+                                    <div class="options">
+                                        <li><button type="button"> </button></li>
+                                    </div>
+                                </div>
+                            </div>`;
+            }
+            
+            let groupCarousel = `
+            <div class="msg-wrapper">
+            <div class="msg-carousel bot-msg">
+                <div class="msg-carousel-nav">
+                    <div id="caraousel-slide">
+                    <button class="carousel-next carousel-btn-nav" data="prev"><i class="fas fa-angle-left"></i></button>
+                    <div></div>
+                    <button class="carousel-prev carousel-btn-nav" data="next"><i class="fas fa-angle-right"></i></button>
+                    </div>
+                </div>
+                <div class="carousel-grp" id="carousel-content">
+                    `+ carousel +`
+                </div>
+            </div>
+        </div>`;
+        
+        jQuery(groupCarousel).insertBefore(".body-msg #spinner-holder");
+        scrollBottom();
+            
 
         }
 

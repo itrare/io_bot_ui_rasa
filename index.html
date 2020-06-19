@@ -25,7 +25,8 @@
                         </span>
                     </div>
                     <div class="in-cb-rightItem">
-                        <button><i class="fas fa-info"></i></button>
+                        <button id="expand-chatroom"><i class="fas fa-expand"></i></button>
+                        <button id="show-about"><i class="fas fa-info"></i></button>
                     </div>
                 </div>
                 <div class="in-cb-body">
@@ -61,13 +62,35 @@
                     </div>
                     <div class="body-msg">
                         
-                        <div class="spinner">
-                            <div class="bounce1"></div>
-                            <div class="bounce2"></div>
-                            <div class="bounce3"></div>
+                        
+                        <div class="msg-wrapper" id="spinner-holder">
+                        <div class="msg-grp bot-msg">
+                            <div class="u-pic">
+                                <img src="./static/landing-page-smart-home-with-robot-icon/2050_CROP.jpg">
+                            </div>
+                            <div class="msg-items">
+                                <li><div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div></li>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="msg-wrapper hide" >
+                        <div class="msg-form-grp bot-msg">
+                            <div class="form-wrapper">
+                            
+                                <div class="form-in-grp">
+                                    <label>Write your new password or change it from <a href="#">here</a></label>
+                                    <input type="password">
+                                </div>
+                                <div class="form-btn-in-grp">
+                                    <button type="button">Change</button>
+                                    <button type="button">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="in-cb-footer">
                     <div class="in-cb-tools">
 
