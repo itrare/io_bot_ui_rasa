@@ -84,6 +84,7 @@ background: #A3E4D7; /* simple back */
     display: block;
     padding:5px;
     text-align: center;
+    color:white;
 }
 .in-cb-upper .in-cb-rightItem{
     display: block;
@@ -610,7 +611,12 @@ iframe{
 .msg-carousel .carousel-grp::-webkit-scrollbar{
     height:0;
 }
-.msg-carousel .carousel-item img{
+.carousel-item img{
+    width:250px;
+    border-radius: 5px;
+    height:250px;
+}
+.carousel-item .map{
     width:250px;
     border-radius: 5px;
     height:250px;
@@ -659,12 +665,7 @@ iframe{
 .carousel-head div{
     padding:10px;
 }
-.carousel-footer .options li{
-    list-style-type: none;
-
-}
-
-.carousel-footer .options li button{
+.carousel-footer .options button{
     border:none;
     padding:5px 12px;
     border-radius: 5px;
